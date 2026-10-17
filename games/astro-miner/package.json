@@ -1,0 +1,22 @@
+{
+  "name": "astro-miner",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Astro Miner — a Three.js idle/tycoon playable ad (portfolio piece). Hold to fly the drone, mine ore, refine crystals, serve cargo ships.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "@types/three": "0.170.0",
+    "typescript": "5.6.3",
+    "vite": "5.4.21",
+    "vite-plugin-singlefile": "2.3.3"
+  }
+}
