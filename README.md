@@ -1,0 +1,28 @@
+# Gam3DEV — web game portfolio
+
+A collection of browser games and playable ads built with **Three.js** and **PixiJS**. Each game is a separate, self-contained project with its own `package.json`, under [`games/`](games/).
+
+| Game | Engine | Genre | Folder |
+|---|---|---|---|
+| Astro Miner | Three.js 0.170 + Vite + TypeScript | 3D idle / tycoon playable ad | [`games/astro-miner`](games/astro-miner) |
+
+## Running a game
+```bash
+cd games/<game>
+npm install
+npm run dev     # local dev server
+npm run build   # dist/index.html — a single self-contained file
+```
+
+## Branches
+- `main` — stable, released games only.
+- `develop` — integration branch; finished features are merged here first.
+- `feature/<game-or-feature>` — one branch per new game or feature, branched from `develop`.
+
+Workflow: `feature/*` → pull request into `develop` → when stable, `develop` → `main`.
+
+## Adding a new game
+1. `git checkout develop && git checkout -b feature/<game-name>`
+2. Create `games/<game-name>/` with its own `package.json`, `README.md` and `.gitignore`.
+3. Add a row to the table above.
+4. Merge into `develop`, then into `main`.
