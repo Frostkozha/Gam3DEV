@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Astro Miner</title>
+  <style>
+    :root {
+      --cyan: #47e8ff;
+      --gold: #ffc93c;
+      --red: #ff4d5e;
+      --panel: rgba(10, 14, 38, 0.78);
+      --panel-edge: rgba(120, 160, 255, 0.35);
+      --ink: #eef3ff;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #070815; color: var(--ink);
+      font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif; }
+    #game { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; touch-action: none; }
+
+    /* HUD */
+    #hud { position: fixed; top: max(12px, env(safe-area-inset-top)); left: 12px; right: 12px; display: flex; justify-content: space-between; pointer-events: none; }
+    .pill { display: flex; align-items: center; gap: 8px; padding: 8px 14px 8px 10px; border-radius: 999px; background: var(--panel);
+      border: 1px solid var(--panel-edge); box-shadow: 0 0 18px rgba(71, 232, 255, 0.15); font-weight: 800; font-size: 20px; letter-spacing: 0.5px; }
+    .pill small { font-size: 10px; opacity: 0.7; font-weight: 700; letter-spacing: 1px; }
+    .coin-ico { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff3b0, var(--gold) 45%, #b07800);
+      box-shadow: 0 0 10px rgba(255, 201, 60, 0.7); }
+    .ship-ico { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 20px solid var(--cyan);
+      filter: drop-shadow(0 0 6px var(--cyan)); }
+    #lost.alarm { animation: alarm 0.5s ease-in-out 3; border-color: var(--red); }
+    #lost.alarm .ship-ico { border-bottom-color: var(--red); }
+    #coins.bump { animation: bump 0.25s ease-out; }
+    @keyframes bump { 50% { transform: scale(1.15); } }
+    @keyframes alarm { 50% { transform: scale(1.18); box-shadow: 0 0 26px var(--red); } }
+
+    /* Hint line */
+    #hint { position: fixed; left: 50%; top: 22%; transform: translateX(-50%); padding: 8px 18px; border-radius: 12px; background: var(--panel);
+      border: 1px solid var(--panel-edge); font-weight: 800; font-size: 18px; letter-spacing: 1px; white-space: nowrap; pointer-events: none;
+      transition: opacity 0.2s; opacity: 0; }
+    #hint.show { opacity: 1; }
+
+    /* Tutorial */
+    #tutorial { position: fixed; left: 50%; bottom: 34%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 14px;
+      pointer-events: none; transition: opacity 0.3s; }
+    #tutorial.hidden { opacity: 0; }
+    .tut-txt { font-size: 30px; font-weight: 900; letter-spacing: 2px; color: #fff; text-shadow: 0 0 14px var(--cyan), 0 3px 0 #1a2a6c; }
+    .hand { width: 56px; height: 56px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 0 20px var(--cyan); animation: press 1.2s ease-in-out infinite; }
+    @keyframes press { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(0.72); opacity: 1; background: rgba(71, 232, 255, 0.35); } }
+
+    /* Upgrade cards */
+    #cards { position: fixed; left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; gap: 10px; }
+    .card { width: 112px; padding: 10px 8px; border-radius: 14px; background: var(--panel); border: 2px solid var(--panel-edge); text-align: center;
+      cursor: pointer; transition: transform 0.12s, opacity 0.2s, border-color 0.2s; animation: cardIn 0.35s ease-out; }
+    .card .t { font-size: 13px; font-weight: 900; letter-spacing: 0.5px; min-height: 32px; display: flex; align-items: center; justify-content: center; }
+    .card .d { font-size: 10px; opacity: 0.7; min-height: 26px; margin-top: 2px; }
+    .card .c { margin-top: 6px; display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; background: rgba(0, 0, 0, 0.35);
+      font-weight: 900; font-size: 15px; }
+    .card .c .coin-ico { width: 14px; height: 14px; }
+    .card.auto { border-color: rgba(255, 201, 60, 0.6); }
+    .card.off { opacity: 0.5; cursor: default; }
+    .card.ready { border-color: var(--cyan); animation: pulse 1s ease-in-out infinite; }
+    .card.auto.ready { border-color: var(--gold); }
+    .card.maxed .c { color: var(--cyan); }
+    .card:active:not(.off) { transform: scale(0.94); }
+    @keyframes pulse { 50% { transform: translateY(-6px); box-shadow: 0 0 22px rgba(71, 232, 255, 0.5); } }
+    @keyframes cardIn { from { transform: translateY(30px); opacity: 0; } }
+
+    /* Popups and flying coins */
+    #popups { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+    .pop { position: absolute; transform: translate(-50%, -50%); font-weight: 900; font-size: 22px; color: var(--gold); text-shadow: 0 2px 0 #5a3a00, 0 0 10px rgba(255, 201, 60, 0.6);
+      animation: rise 0.9s ease-out forwards; white-space: nowrap; }
+    .pop.bad { color: var(--red); text-shadow: 0 2px 0 #4a0010, 0 0 12px rgba(255, 77, 94, 0.7); font-size: 20px; }
+    .pop.info { color: var(--cyan); text-shadow: 0 2px 0 #06303a, 0 0 12px rgba(71, 232, 255, 0.6); }
+    @keyframes rise { to { transform: translate(-50%, -160%); opacity: 0; } }
+    .fly-coin { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; transition: transform 0.6s cubic-bezier(0.5, -0.3, 0.7, 1), opacity 0.6s; }
+
+    /* Endcard */
+    #endcard { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(20, 16, 60, 0.75), rgba(4, 4, 14, 0.94));
+      transition: opacity 0.4s; }
+    #endcard.hidden { opacity: 0; pointer-events: none; }
+    .end-box { text-align: center; padding: 28px 30px; max-width: 86vw; animation: popIn 0.5s cubic-bezier(0.2, 1.6, 0.4, 1); }
+    .end-title { font-size: 36px; font-weight: 900; letter-spacing: 2px; line-height: 1.1; color: #fff; text-shadow: 0 0 20px var(--cyan), 0 4px 0 #1a2a6c; }
+    #endcard.lose .end-title { text-shadow: 0 0 20px var(--red), 0 4px 0 #4a0010; }
+    .end-sub { margin-top: 12px; font-size: 16px; opacity: 0.85; }
+    .end-score { margin: 20px auto 0; display: inline-flex; align-items: center; gap: 10px; font-size: 30px; font-weight: 900; }
+    .end-btn { margin-top: 26px; padding: 16px 44px; border: none; border-radius: 999px; font: inherit; font-size: 22px; font-weight: 900; letter-spacing: 1.5px; color: #10162e;
+      background: linear-gradient(180deg, #8ff6ff, var(--cyan)); box-shadow: 0 6px 0 #1b7f99, 0 0 30px rgba(71, 232, 255, 0.5); cursor: pointer; animation: pulse 1.1s ease-in-out infinite; }
+    .end-credit { margin-top: 22px; font-size: 11px; opacity: 0.5; letter-spacing: 1px; }
+    @keyframes popIn { from { transform: scale(0.6); opacity: 0; } }
+    #loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; letter-spacing: 2px; }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="hud">
+    <div id="lost" class="pill"><span class="ship-ico"></span><span id="lostTxt">0/5</span><small>SHIPS<br />LOST</small></div>
+    <div id="coins" class="pill"><span class="coin-ico"></span><span id="coinTxt">0</span></div>
+  </div>
+  <div id="hint"></div>
+  <div id="tutorial"><div class="hand"></div><div class="tut-txt">HOLD TO FLY</div></div>
+  <div id="cards"></div>
+  <div id="popups"></div>
+  <div id="endcard" class="hidden">
+    <div class="end-box">
+      <div class="end-title" id="endTitle"></div>
+      <div class="end-sub" id="endSub"></div>
+      <div class="end-score"><span class="coin-ico"></span><span id="endCoins">0</span></div>
+      <div><button class="end-btn" id="endBtn">PLAY AGAIN</button></div>
+      <div class="end-credit">ASTRO MINER · THREE.JS PORTFOLIO DEMO</div>
+    </div>
+  </div>
+  <div id="loading">LOADING…</div>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
