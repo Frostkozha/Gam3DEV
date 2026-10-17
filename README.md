@@ -5,6 +5,7 @@ A collection of browser games and playable ads built with **Three.js** and **Pix
 | Game | Engine | Genre | Folder |
 |---|---|---|---|
 | Astro Miner | Three.js 0.170 + Vite + TypeScript | 3D idle / tycoon playable ad | [`games/astro-miner`](games/astro-miner) |
+| Tile Trio | PixiJS 8.5 + Vite + TypeScript | 2D tile-match puzzle playable ad | [`games/tile-trio`](games/tile-trio) |
 
 ## Running a game
 ```bash
