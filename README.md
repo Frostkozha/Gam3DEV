@@ -8,6 +8,7 @@ A collection of browser games and playable ads built with **Three.js** and **Pix
 | Tile Trio | PixiJS 8.5 + Vite + TypeScript | 2D tile-match puzzle playable ad | [`games/tile-trio`](games/tile-trio) |
 | Neon Dash | Three.js 0.170 + Vite + TypeScript | 3D lane runner playable ad | [`games/neon-dash`](games/neon-dash) |
 | Turret Trail | PixiJS 8.5 + Vite + TypeScript | 2D hyper-casual tower defense playable ad | [`games/turret-trail`](games/turret-trail) |
+| Merge Garden | PixiJS 8.5 + Vite + TypeScript | 2D merge-2 playable ad | [`games/merge-garden`](games/merge-garden) |
 
 ## Running a game
 ```bash
