@@ -1,0 +1,22 @@
+{
+  "name": "neon-dash",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Neon Dash — a Three.js 3-lane runner playable ad (portfolio piece). Swipe to dodge barriers, jump gaps, grab coins, reach the finish gate.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "@types/three": "0.170.0",
+    "typescript": "5.6.3",
+    "vite": "5.4.21",
+    "vite-plugin-singlefile": "2.3.3"
+  }
+}
