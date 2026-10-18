@@ -7,6 +7,7 @@ A collection of browser games and playable ads built with **Three.js** and **Pix
 | Astro Miner | Three.js 0.170 + Vite + TypeScript | 3D idle / tycoon playable ad-like game | [`games/astro-miner`](games/astro-miner) |
 | Tile Trio | PixiJS 8.5 + Vite + TypeScript | 2D tile-match puzzle playable ad | [`games/tile-trio`](games/tile-trio) |
 | Neon Dash | Three.js 0.170 + Vite + TypeScript | 3D lane runner playable ad | [`games/neon-dash`](games/neon-dash) |
+| Turret Trail | PixiJS 8.5 + Vite + TypeScript | 2D hyper-casual tower defense playable ad | [`games/turret-trail`](games/turret-trail) |
 
 ## Running a game
 ```bash
