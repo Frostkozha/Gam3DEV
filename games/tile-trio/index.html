@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Tile Trio</title>
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #241845; color: #fff;
+      font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif; }
+    canvas { position: fixed; inset: 0; display: block; touch-action: none; }
+    #loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; letter-spacing: 2px; }
+    #endcard { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(circle, rgba(60, 30, 100, 0.8), rgba(14, 6, 30, 0.95)); transition: opacity 0.4s; }
+    #endcard.hidden { opacity: 0; pointer-events: none; }
+    .end-box { text-align: center; padding: 28px 30px; max-width: 86vw; animation: popIn 0.5s cubic-bezier(0.2, 1.6, 0.4, 1); }
+    .end-title { font-size: 38px; font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 20px #ffb020, 0 4px 0 #6a2a00; }
+    #endcard.lose .end-title { text-shadow: 0 0 20px #ff5a6e, 0 4px 0 #4a0010; }
+    .end-sub { margin-top: 12px; font-size: 16px; opacity: 0.85; }
+    .end-score { margin-top: 18px; font-size: 30px; font-weight: 900; color: #ffd04a; }
+    .end-btn { margin-top: 26px; padding: 16px 44px; border: none; border-radius: 999px; font: inherit; font-size: 22px; font-weight: 900; letter-spacing: 1.5px;
+      color: #3a1600; background: linear-gradient(180deg, #ffe27a, #ffb020); box-shadow: 0 6px 0 #a35a00, 0 0 30px rgba(255, 176, 32, 0.5); cursor: pointer;
+      animation: pulse 1.1s ease-in-out infinite; }
+    .end-credit { margin-top: 22px; font-size: 11px; opacity: 0.5; letter-spacing: 1px; }
+    @keyframes pulse { 50% { transform: translateY(-5px); } }
+    @keyframes popIn { from { transform: scale(0.6); opacity: 0; } }
+  </style>
+</head>
+<body>
+  <div id="loading">LOADING…</div>
+  <div id="endcard" class="hidden">
+    <div class="end-box">
+      <div class="end-title" id="endTitle"></div>
+      <div class="end-sub" id="endSub"></div>
+      <div class="end-score" id="endScore"></div>
+      <div><button class="end-btn" id="endBtn">PLAY AGAIN</button></div>
+      <div class="end-credit">TILE TRIO · PIXIJS PORTFOLIO DEMO</div>
+    </div>
+  </div>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
