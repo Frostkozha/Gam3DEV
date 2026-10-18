@@ -1,0 +1,22 @@
+{
+  "name": "sky-stack",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Sky Stack — a Three.js one-tap stacking playable ad (portfolio piece). Drop sliding blocks, trim the overhang, reach 20 floors.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "@types/three": "0.170.0",
+    "typescript": "5.6.3",
+    "vite": "5.4.21",
+    "vite-plugin-singlefile": "2.3.3"
+  }
+}
